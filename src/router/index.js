@@ -22,7 +22,7 @@ const routes = [
   },
   {
     path: "/add-comuna/",
-    name: "nuevaComuna",
+    name: "newComuna",
     component: NewComuna,
   },
   {

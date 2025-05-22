@@ -1,10 +1,9 @@
 <template>
     <div class="container">
-        <h1 class="text-start">Listado de Comunas |
-            <button @click="newcomuna()" 
-            class="btn btn-success mx-2">
-            <font-awesome-icon icon="plus" />
-
+        <h1 class="text-start">
+            Listado de Comunas |
+            <button @click="newcomuna()" class="btn btn-success mx-2">
+                <font-awesome-icon icon="plus" />
             </button>
         </h1>
         <table class="table">
@@ -18,20 +17,17 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(comuna,index) in comunas" :key="index">
-                    <th scope="row">{{ index+1 }}</th>
+                <tr v-for="(comuna, index) in comunas" :key="index">
+                    <th scope="row">{{ index + 1 }}</th>
                     <td>{{ comuna.comu_codi }}</td>
                     <td>{{ comuna.comu_nomb }}</td>
                     <td>{{ comuna.muni_nomb }}</td>
                     <td>
-                        <button @click="deleteComuna(comuna.comu_codi)"
-                        class="btn btn-danger mx-2">
+                        <button @click="deleteComuna(comuna.comu_codi)" class="btn btn-danger mx-2">
                             <font-awesome-icon icon="trash" />
                         </button>
-                        <button @click="editComuna(comuna.comu_codi)"
-                        class="btn btn-warning mx-2">
+                        <button @click="editComuna(comuna.comu_codi)" class="btn btn-warning mx-2">
                             <font-awesome-icon icon="pencil" />
-
                         </button>
                     </td>
                 </tr>
@@ -43,6 +39,7 @@
 <script>
 import axios from 'axios'
 import Swal from 'sweetalert2'
+
 export default {
     name: 'Comuna',
     data() {
@@ -51,34 +48,38 @@ export default {
         }
     },
     methods: {
-        deleteComuna(codigo){
-            Swal.fire ({
+        deleteComuna(codigo) {
+            Swal.fire({
                 title: `Do you want to delete the comuna ${codigo}?`,
                 showCancelButton: true,
                 confirmButtonText: 'Delete',
             }).then((result) => {
                 if (result.isConfirmed) {
                     axios.delete(`http://localhost:8000/api/comunas/${codigo}`)
-                    .then(response => {
-                        Swal.fire('Deleted!', '', 'success')
-                        this.comunas = response.data.comunas
-                    })
+                        .then(response => {
+                            Swal.fire('Deleted!', '', 'success')
+                            this.comunas = response.data.comunas
+                        })
                 }
-            }
+            })
+        },
+
+        editComuna(id) {
+            this.$router.push({ name: 'editarComuna', params: { id: `${id}` } })
+        },
+
+        
+        newComuna() {
+            this.$router.push({ name: 'newComuna' })
         }
     },
 
-    editComuna(id){
-        this.$router.push({name: 'Editar Comuna', params: {id :`${id}`}})
-    }
-
-    newcomuna(){
-        this.$router.push({name: 'Crear Comuna'})
+    
     mounted() {
-        axios
-        .get('http://localhost:8000/api/comunas')
-        .then(response => ( this.comunas = response.data.comunas))
-            
-    },
+        axios.get('http://localhost:8000/api/comunas')
+            .then(response => {
+                this.comunas = response.data.comunas
+            })
+    }
 }
 </script>
