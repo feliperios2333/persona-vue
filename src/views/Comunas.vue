@@ -42,6 +42,7 @@
 
 <script>
 import axios from 'axios'
+import Swal from 'sweetalert2'
 export default {
     name: 'Comuna',
     data() {
@@ -49,6 +50,30 @@ export default {
             comunas: []
         }
     },
+    methods: {
+        deleteComuna(codigo){
+            Swal.fire ({
+                title: `Do you want to delete the comuna ${codigo}?`,
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete(`http://localhost:8000/api/comunas/${codigo}`)
+                    .then(response => {
+                        Swal.fire('Deleted!', '', 'success')
+                        this.comunas = response.data.comunas
+                    })
+                }
+            }
+        }
+    },
+
+    editComuna(id){
+        this.$router.push({name: 'Editar Comuna', params: {id :`${id}`}})
+    }
+
+    newcomuna(){
+        this.$router.push({name: 'Crear Comuna'})
     mounted() {
         axios
         .get('http://localhost:8000/api/comunas')
